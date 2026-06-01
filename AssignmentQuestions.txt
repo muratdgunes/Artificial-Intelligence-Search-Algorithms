@@ -1,0 +1,123 @@
+Murat Doruk Güneş 2453272
+Berkay Ceylan 2453041
+------------------------------
+ASSIGNMENT 2
+
+The Files that have been done for Assignment 2 is choclate.h and choclate.c in the main menu you can directly try the
+human vs human and human vs ai option for the choclate game. However, since our first assignment is intertwined in a way
+we are using all files to compile the all assignment1 files are here as well in order to run Challenge room 2 which is
+the finding mad scientist challenge. In order to try Lara vs AI similation you need to enter challenge room 2. In our
+first assigment agent LARA was opeining challenge room 2 when you select the option 1 which is UCS.
+To sum up:
+You can directly test the  human vs human and human vs ai option
+You can test the Lara vs AI similation when you select the 1 which is UCS
+You can adjust the max board size from thechoclate.h HOWEVER, WE HIGHLY RECCOMMEND TO USE IT WITH SIZE 4
+Because if you make 5 it will takes a lot of time for the AI to find  as our calculations it takes
+approximately 3 minutes for each 5x4 and approximately few hours for 5x5 board but at the end it will calculate
+
+
+------------------------------------------------------
+ASSIGNMENT 1
+Questions Task 1:
+Assumptions: - When doing BFS, our algorithm will start by expanding by going right first. In that case this path will be
+               followed: S -> C1 -> F -> E. Notice that C2 was not entered because BFS expanded C1 first.
+             - We assumed that agent only works according to one search algorithm at a time. Each algorithm (UCS & BFS)
+               gives a different path and solutions. To conclude, this is why we didnt used loop in the main. There is only
+               one time selection for the searching algorithm in main. However, if we implemented our code so that it works
+               in a loop, asking for different algorithm (UCS, BFS) each time. There is a reset visited function that resets visited
+               flags of vertex nodes. In that case, we would also need to reset flags in challenge rooms.
+
+
+1) Which path passes through the safe house (F)
+Answer: UCS function's path passes through the safe house with  "S->F->C2->E" on the other hand BFS function's couldn't
+        passes through the safe house with "S->C1->E"
+
+2) Which algorithm (BFS or UCS) reaches the goal with fewer expansions?
+Answer: BFS reaches the goal with fewer step with expansion order (S->C1->F->E) with count 4 on the other hand UCS
+        reaches the goal with more step with expansion order (S->F->C1->C2->E) with count 5
+
+3) Does passing through the safe house always lead to an optimal solution?
+Answer: No, because As we can see in our assignment for example BFS expand F but in path F is not here so we easly
+        understand that passing through the safe house does not guarantee an optimal solution if we are looking for the
+        number of edges. Also, another example is when doing a costs depending search going the safe house cost may be
+        a more higher than other going the others. To sum up we cannot say the passing through the safe house
+        always guarantee an optimal solution
+
+4) Compare the solution paths returned by BFS and UCS.
+Answer: UCS returned the path (S -> F -> C2 -> E), while BFS returned the path (S -> C1 -> E). BFS finds the optimal
+        path in terms of the fewest number of edges (2 steps). However, UCS finds the optimal path in terms of the
+        lowest total path cost. Total cost of 278 for UCS vs. 310 for BFS)
+
+
+
+
+Problem Formulation for Challenge 1:
+
+Assumptions: 1- We assumed that we are performing graph search (no repetitive states).
+             2- We assumed that prisoners do not escape while not supervised by guard(s).
+
+
+1- States: (G, P, B). G stands for how many guards are on the left side.
+                      P stands for how many prisoners are on the left side.
+                      B stands for boat location. (B=0 means left, B=1 means right)
+
+   States are represented by this tuple (G,P,B). Prisoners on one side always should be less than or equal to guards.
+
+
+2- Initial State: (3,3,0). Three guards on the left side, three prisoners on the left side and boat is on the left side.
+
+
+3- Actions: There are 5 possible actions;
+         - move(1,0) means one guard moves.
+         - move(2,0) means two guards move.
+         - move(0,1) means one prisoner moves.
+         - move(0,2) means two prisoners move.
+         - move(1,1) means one prisoner & one guard moves.
+
+
+4- Transition Model: - If the boat is on the left (B=0), move(g,p) subtracts those people from the left bank and moves the boat to the right.
+                       The new state becomes (G-g, P-p, 1).
+
+                     - If the boat is on the right (B=1), move(g,p) adds those people to the left bank and moves the boat to the left.
+                       The new state becomes (G+g, P+p, 0).
+
+   Assumption: These transitions only executed if condition of "Guards are not outnumbered by prisoners in any side" satisfies.
+
+
+5- Goal states: (0,0,1). No guards or prisoners on the left side. All guards and prisoners are on the right side. Boat on the right side.
+
+
+6- Action cost: Each move costs exactly 1. Cost is equal to boat trips.
+
+
+Questions Challenge 1:
+1- What makes a state invalid in this problem?
+Answer: State becomes invalid if at any point Prisoner count exceeds Guard count in any sides of the river given that there is
+        at least one guard in that side. If there is no Guard in a side, then prisoners can exceed guard number.
+        For example: 3 guards in left side, 3 prisoners in right side. is valid because guards are not outnumbered, there are
+        no guards on the prisoners' side.
+
+2- Why must the heuristic be admissible?
+Answer: Heuristic must be admissible because we don't want to overestimate in our problem. Admissible heuristic makes sure
+        the algorithm finds the optimal path. If we didn't have an admissible heuristic in our problem, it may not return the
+        optimal path, therefore, solving the problem in an inefficient way.
+
+3- What happens if your heuristic overestimates?
+Answer: If heuristic overestimates, A* algorithm loses the ability to find optimal path. It may skip an optimal path just
+        because it looks too expensive (due to overestimated heuristic). Therefore, it may return a sub optimal solution path.
+
+
+
+Questions Challenge 2:
+1- Is Greedy Best-First Search guaranteed to find the optimal?
+Answer: No, Greedy Best-First Search (GBFS) is not guaranteed to find optimal cost. It directly selects heuristic cost
+        without considering path cost. Since GBFS chooses locally optimal choice, it can easily get trapped or take longer
+        overall path due to blindly selecting only heuristic cost.
+
+2-  How does the heuristic affect node expansion?
+Answer: In GBFS, heuristic is only metric algorithm looks at. If heuristic is strong/accurate, then it reduces number of expanded
+        nodes greatly. But if heuristic value is poor, GBFS may unnecessarily expand a lot of nodes.
+
+3- What happens if nodes are expanded more than once?
+Answer: In graph search, nodes are never expanded more than once. If we expand it more than once it will become tree search which has a danger
+        of getting trapped  in an infinite loop. (especially in labyrinths with cycles).
